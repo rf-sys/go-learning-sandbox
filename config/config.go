@@ -1,0 +1,74 @@
+package config
+
+import (
+	"errors"
+	"github.com/spf13/viper"
+	"time"
+)
+
+type Config struct {
+	Redis    Redis
+	Database Database
+}
+
+type Redis struct {
+	Host     string
+	Password string
+}
+
+type Database struct {
+	Driver          string
+	Datasource      string
+	ConnMaxLifetime time.Duration
+	ConnMaxIdleTime time.Duration
+	MaxOpenConns    int
+	MaxIdleConns    int
+}
+
+const redisHostKey = "REDIS_HOST"
+const redisPortKey = "REDIS_PORT"
+const databaseDriverKey = "DATABASE_DRIVER"
+const databaseDatasourceKey = "DATABASE_DATASOURCE"
+const databaseConnMaxLifetimeKey = "DATABASE_CONN_MAX_LIFETIME"
+const databaseConnMaxIdleTimeKey = "DATABASE_CONN_MAX_IDLE_TIME"
+const databaseMaxOpenConnsKey = "DATABASE_MAX_OPEN_CONNS"
+const databaseMaxIdleConnsKey = "DATABASE_MAX_IDLE_CONNS"
+
+func NewConfig() (Config, error) {
+	err := loadEnvironment()
+	if err != nil {
+		return Config{}, errors.New("could not read configuration properties: " + err.Error())
+	}
+
+	// populating our Config struct
+	cfg := Config{
+		Redis: Redis{
+			Host:     viper.GetString(redisHostKey),
+			Password: viper.GetString(redisPortKey),
+		},
+		Database: Database{
+			Driver:          viper.GetString(databaseDriverKey),
+			Datasource:      viper.GetString(databaseDatasourceKey),
+			ConnMaxLifetime: viper.GetDuration(databaseConnMaxLifetimeKey),
+			ConnMaxIdleTime: viper.GetDuration(databaseConnMaxIdleTimeKey),
+			MaxOpenConns:    viper.GetInt(databaseMaxOpenConnsKey),
+			MaxIdleConns:    viper.GetInt(databaseMaxIdleConnsKey),
+		},
+	}
+
+	return cfg, nil
+}
+
+// Loads configuration properties into configuration registry (memory)
+func loadEnvironment() error {
+	viper.SetEnvPrefix("AP")
+
+	viper.SetDefault(databaseConnMaxLifetimeKey, 0)
+	viper.SetDefault(databaseConnMaxIdleTimeKey, 0)
+	viper.SetDefault(databaseMaxOpenConnsKey, 0)
+	viper.SetDefault(databaseMaxIdleConnsKey, 0)
+
+	viper.AutomaticEnv()
+
+	return nil
+}
