@@ -5,7 +5,6 @@ import (
 	"awesomeProject1/model"
 	"awesomeProject1/repository"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -17,14 +16,14 @@ func postUsers(repository repository.UserRepository, logger log.Logger) http.Han
 
 		err := json.NewDecoder(r.Body).Decode(&user)
 		if err != nil {
-			logger.Error(err, fmt.Sprintf("failed decoding JSON payload: %v", err))
+			logger.Error(err, "failed decoding JSON payload")
 			http.Error(w, "Invalid payload", http.StatusBadRequest)
 			return
 		}
 
 		err = repository.Create(user)
 		if err != nil {
-			logger.Error(err, fmt.Sprintf("failed inserting new user into database: %v", err))
+			logger.Error(err, "failed inserting new user into database")
 			http.Error(w, http.StatusText(http.StatusUnprocessableEntity), http.StatusUnprocessableEntity)
 			return
 		}

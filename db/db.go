@@ -3,7 +3,6 @@ package db
 import (
 	"awesomeProject1/config"
 	"awesomeProject1/log"
-	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
@@ -26,6 +25,6 @@ func NewDb(cfg config.Config) (*sqlx.DB, error) {
 func CloseDb(db *sqlx.DB, logger log.Logger) {
 	err := db.Close()
 	if err != nil {
-		logger.Error(err, fmt.Sprintf("Failed closing database connection: %v", err))
+		logger.Error(err, "failed closing database connection")
 	}
 }
