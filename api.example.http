@@ -1,0 +1,12 @@
+### List all users
+GET http://localhost:8080/users
+Accept: application/json
+
+### Create new user
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "username": "chassidykn",
+  "password": "67dSgmgUAAP"
+}
