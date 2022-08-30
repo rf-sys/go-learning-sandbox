@@ -10,7 +10,7 @@ import (
 )
 
 type UserService interface {
-	FindAll() ([]model.User, error)
+	GetAllUsers() ([]model.User, error)
 	Create(user model.User) (model.User, error)
 }
 
@@ -19,7 +19,7 @@ type PostgresUserService struct {
 	logger     log.Logger
 }
 
-func (service PostgresUserService) FindAll() ([]model.User, error) {
+func (service PostgresUserService) GetAllUsers() ([]model.User, error) {
 	return service.repository.FindAll()
 }
 
