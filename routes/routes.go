@@ -7,8 +7,8 @@ import (
 
 func LoadRoutes(r *chi.Mux) *chi.Mux {
 	r.Get(getConfigEndpoint, getConfig(runtime.Config, runtime.Logger))
-	r.Get(getUsersEndpoint, getUsers(runtime.UserRepository, runtime.Logger))
-	r.Post(postUsersEndpoint, postUsers(runtime.UserRepository, runtime.Logger))
+	r.Get(getUsersEndpoint, getUsers(runtime.UserService, runtime.Logger))
+	r.Post(postUsersEndpoint, postUsers(runtime.UserService, runtime.Logger))
 
 	return r
 }

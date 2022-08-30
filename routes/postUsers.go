@@ -2,16 +2,16 @@ package routes
 
 import (
 	"awesomeProject1/log"
-	"awesomeProject1/repository"
+	"awesomeProject1/service"
 	"encoding/json"
 	"net/http"
 )
 
 const getUsersEndpoint = "/users"
 
-func getUsers(repository repository.UserRepository, logger log.Logger) http.HandlerFunc {
+func getUsers(service service.UserService, logger log.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		users, err := repository.FindAll()
+		users, err := service.FindAll()
 		if err != nil {
 			logger.Error(err, "failed finding users")
 			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)

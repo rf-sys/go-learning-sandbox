@@ -5,6 +5,7 @@ import (
 	"awesomeProject1/db"
 	"awesomeProject1/log"
 	"awesomeProject1/repository"
+	"awesomeProject1/service"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -12,6 +13,7 @@ var Config config.Config
 var Logger log.Logger
 var Database *sqlx.DB
 var UserRepository repository.UserRepository
+var UserService service.UserService
 
 func InitRuntimeEnvironment() error {
 	var err error
@@ -29,6 +31,8 @@ func InitRuntimeEnvironment() error {
 	}
 
 	UserRepository = repository.NewPostgresUserRepository(Database, Logger)
+
+	UserService = service.NewPostgresUserService(UserRepository, Logger)
 
 	return nil
 }

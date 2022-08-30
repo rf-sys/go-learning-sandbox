@@ -3,14 +3,15 @@ package routes
 import (
 	"awesomeProject1/log"
 	"awesomeProject1/model"
-	"awesomeProject1/repository"
+	"awesomeProject1/service"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
 const postUsersEndpoint = "/users"
 
-func postUsers(repository repository.UserRepository, logger log.Logger) http.HandlerFunc {
+func postUsers(service service.UserService, logger log.Logger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var user model.User
 
@@ -21,7 +22,8 @@ func postUsers(repository repository.UserRepository, logger log.Logger) http.Han
 			return
 		}
 
-		err = repository.Create(user)
+		newUser, err := service.Create(user)
+
 		if err != nil {
 			logger.Error(err, "failed inserting new user into database")
 			http.Error(w, http.StatusText(http.StatusUnprocessableEntity), http.StatusUnprocessableEntity)
@@ -29,7 +31,7 @@ func postUsers(repository repository.UserRepository, logger log.Logger) http.Han
 		}
 
 		w.WriteHeader(http.StatusCreated)
-		_, err = w.Write([]byte("user created"))
+		_, err = w.Write([]byte(fmt.Sprintf("user created with id %v", newUser.ID)))
 		if err != nil {
 			logger.Error(err, "failed writing a response body")
 		}
