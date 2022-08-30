@@ -9,19 +9,24 @@ import (
 	"time"
 )
 
-type UserRepository struct {
+type UserRepository interface {
+	FindAll() ([]model.User, error)
+	Create(user model.User) error
+}
+
+type PostgresUserRepository struct {
 	db     *sqlx.DB
 	logger log.Logger
 }
 
-func NewUserRepository(database *sqlx.DB, logger log.Logger) UserRepository {
-	return UserRepository{
+func NewPostgresUserRepository(database *sqlx.DB, logger log.Logger) UserRepository {
+	return PostgresUserRepository{
 		db:     database,
 		logger: logger,
 	}
 }
 
-func (repository UserRepository) FindAll() ([]model.User, error) {
+func (repository PostgresUserRepository) FindAll() ([]model.User, error) {
 	var users []model.User
 
 	err := repository.db.Select(&users, "SELECT * FROM users")
@@ -36,7 +41,7 @@ func (repository UserRepository) FindAll() ([]model.User, error) {
 	return users, nil
 }
 
-func (repository UserRepository) Create(user model.User) error {
+func (repository PostgresUserRepository) Create(user model.User) error {
 	repository.logger.Debug(fmt.Sprintf("creating password hash for user %s", user.Username))
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 4)
 	if err != nil {
