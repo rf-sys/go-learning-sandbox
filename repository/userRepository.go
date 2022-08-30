@@ -8,7 +8,7 @@ import (
 
 type UserRepository interface {
 	FindAll() ([]model.User, error)
-	Insert(user model.User) (model.User, error)
+	Insert(user model.User) (int, error)
 }
 
 type PostgresUserRepository struct {
@@ -38,18 +38,18 @@ func (repository PostgresUserRepository) FindAll() ([]model.User, error) {
 	return users, nil
 }
 
-func (repository PostgresUserRepository) Insert(user model.User) (model.User, error) {
+func (repository PostgresUserRepository) Insert(user model.User) (int, error) {
+	var id int
+
 	stmt, err := repository.db.PrepareNamed("INSERT INTO users (username, password, created_at) VALUES (:username, :password, :created_at) RETURNING id")
 	if err != nil {
-		return model.User{}, err
+		return id, err
 	}
 
-	var id int
 	err = stmt.Get(&id, user)
 	if err != nil {
-		return model.User{}, err
+		return id, err
 	}
 
-	user.ID = id
-	return user, nil
+	return id, nil
 }

@@ -36,7 +36,14 @@ func (service PostgresUserService) Create(user model.User) (model.User, error) {
 	newUser.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
 
 	service.logger.Debug(fmt.Sprintf("inserting new user %s", user.Username))
-	return service.repository.Insert(newUser)
+	id, err := service.repository.Insert(newUser)
+	if err != nil {
+		return model.User{}, err
+	}
+
+	newUser.ID = id
+
+	return newUser, nil
 }
 
 func NewPostgresUserService(repository repository.UserRepository, logger log.Logger) UserService {
