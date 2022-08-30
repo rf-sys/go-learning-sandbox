@@ -5,12 +5,10 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-const getUsersEndpoint = "/users"
-
 func LoadRoutes(r *chi.Mux) *chi.Mux {
-	r.Get(getConfigEndpoint, getConfig(runtime.Config))
-	r.Get(getUsersEndpoint, getUsers(runtime.UserRepository))
-	r.Post(postUsersEndpoint, postUsers(runtime.UserRepository))
+	r.Get(getConfigEndpoint, getConfig(runtime.Config, runtime.Logger))
+	r.Get(getUsersEndpoint, getUsers(runtime.UserRepository, runtime.Logger))
+	r.Post(postUsersEndpoint, postUsers(runtime.UserRepository, runtime.Logger))
 
 	return r
 }

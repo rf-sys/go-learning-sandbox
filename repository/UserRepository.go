@@ -1,20 +1,23 @@
 package repository
 
 import (
+	"awesomeProject1/log"
 	"awesomeProject1/model"
+	"fmt"
 	"github.com/jmoiron/sqlx"
-	"github.com/rs/zerolog/log"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
 type UserRepository struct {
-	db *sqlx.DB
+	db     *sqlx.DB
+	logger log.Logger
 }
 
-func NewUserRepository(database *sqlx.DB) UserRepository {
+func NewUserRepository(database *sqlx.DB, logger log.Logger) UserRepository {
 	return UserRepository{
-		db: database,
+		db:     database,
+		logger: logger,
 	}
 }
 
@@ -34,7 +37,7 @@ func (repository UserRepository) FindAll() ([]model.User, error) {
 }
 
 func (repository UserRepository) Create(user model.User) error {
-	log.Debug().Msgf("creating password hash for user %s", user.Username)
+	repository.logger.Debug(fmt.Sprintf("creating password hash for user %s", user.Username))
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 4)
 	if err != nil {
 		return err
@@ -45,7 +48,7 @@ func (repository UserRepository) Create(user model.User) error {
 	newUser.Password = string(hash)
 	newUser.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
 
-	log.Debug().Msgf("inserting new user %s", user.Username)
+	repository.logger.Debug(fmt.Sprintf("inserting new user %s", user.Username))
 	_, err = repository.db.NamedExec("INSERT INTO users (username, password, created_at) VALUES (:username, :password, :created_at) RETURNING id", newUser)
 	if err != nil {
 		return err

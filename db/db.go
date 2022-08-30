@@ -2,9 +2,10 @@ package db
 
 import (
 	"awesomeProject1/config"
+	"awesomeProject1/log"
+	"fmt"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"github.com/rs/zerolog/log"
 )
 
 // NewDb connects to the database and verifies connection with ping
@@ -22,9 +23,9 @@ func NewDb(cfg config.Config) (*sqlx.DB, error) {
 	return db, nil
 }
 
-func CloseDb(db *sqlx.DB) {
+func CloseDb(db *sqlx.DB, logger log.Logger) {
 	err := db.Close()
 	if err != nil {
-		log.Error().Msgf("Failed closing database connection: %v", err)
+		logger.Error(err, fmt.Sprintf("Failed closing database connection: %v", err))
 	}
 }
