@@ -30,9 +30,9 @@ func InitRuntimeEnvironment() error {
 		return err
 	}
 
-	UserRepository = repository.NewPostgresUserRepository(Database, Logger)
+	UserRepository = repository.NewPostgresUserRepository(Database)
 
-	UserService = service.NewPostgresUserService(UserRepository, Logger)
+	UserService = service.NewPostgresUserService(UserRepository)
 
 	return nil
 }
