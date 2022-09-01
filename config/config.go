@@ -34,7 +34,14 @@ const databaseMaxOpenConnsKey = "DATABASE_MAX_OPEN_CONNS"
 const databaseMaxIdleConnsKey = "DATABASE_MAX_IDLE_CONNS"
 
 func NewConfig() Config {
-	loadEnvironment()
+	viper.SetEnvPrefix("AP")
+
+	viper.SetDefault(databaseConnMaxLifetimeKey, 0)
+	viper.SetDefault(databaseConnMaxIdleTimeKey, 0)
+	viper.SetDefault(databaseMaxOpenConnsKey, 0)
+	viper.SetDefault(databaseMaxIdleConnsKey, 0)
+
+	viper.AutomaticEnv()
 
 	// populating our Config struct
 	cfg := Config{
@@ -53,16 +60,4 @@ func NewConfig() Config {
 	}
 
 	return cfg
-}
-
-// Loads configuration properties into configuration registry (memory)
-func loadEnvironment() {
-	viper.SetEnvPrefix("AP")
-
-	viper.SetDefault(databaseConnMaxLifetimeKey, 0)
-	viper.SetDefault(databaseConnMaxIdleTimeKey, 0)
-	viper.SetDefault(databaseMaxOpenConnsKey, 0)
-	viper.SetDefault(databaseMaxIdleConnsKey, 0)
-
-	viper.AutomaticEnv()
 }
