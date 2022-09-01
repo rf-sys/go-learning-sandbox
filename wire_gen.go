@@ -23,10 +23,7 @@ import (
 // Injectors from wire.go:
 
 func InitializeApp() (App, error) {
-	configConfig, err := config.NewConfig()
-	if err != nil {
-		return App{}, err
-	}
+	configConfig := config.NewConfig()
 	zeroLogger := log.NewZeroLogger()
 	getConfigHandler := handlers.NewGetConfigHandler(configConfig, zeroLogger)
 	sqlxDB, err := db.NewDb(configConfig)

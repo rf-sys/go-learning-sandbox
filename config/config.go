@@ -1,7 +1,6 @@
 package config
 
 import (
-	"errors"
 	"github.com/spf13/viper"
 	"time"
 )
@@ -34,11 +33,8 @@ const databaseConnMaxIdleTimeKey = "DATABASE_CONN_MAX_IDLE_TIME"
 const databaseMaxOpenConnsKey = "DATABASE_MAX_OPEN_CONNS"
 const databaseMaxIdleConnsKey = "DATABASE_MAX_IDLE_CONNS"
 
-func NewConfig() (Config, error) {
-	err := loadEnvironment()
-	if err != nil {
-		return Config{}, errors.New("could not read configuration properties: " + err.Error())
-	}
+func NewConfig() Config {
+	loadEnvironment()
 
 	// populating our Config struct
 	cfg := Config{
@@ -56,11 +52,11 @@ func NewConfig() (Config, error) {
 		},
 	}
 
-	return cfg, nil
+	return cfg
 }
 
 // Loads configuration properties into configuration registry (memory)
-func loadEnvironment() error {
+func loadEnvironment() {
 	viper.SetEnvPrefix("AP")
 
 	viper.SetDefault(databaseConnMaxLifetimeKey, 0)
@@ -69,6 +65,4 @@ func loadEnvironment() error {
 	viper.SetDefault(databaseMaxIdleConnsKey, 0)
 
 	viper.AutomaticEnv()
-
-	return nil
 }

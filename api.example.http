@@ -1,3 +1,7 @@
+### List configuration
+GET http://localhost:8080/configs
+Accept: application/json
+
 ### List all users
 GET http://localhost:8080/users
 Accept: application/json
