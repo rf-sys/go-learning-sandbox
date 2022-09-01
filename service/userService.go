@@ -42,6 +42,6 @@ func (service PostgresUserService) Create(user model.User) (model.User, error) {
 	return newUser, nil
 }
 
-func NewPostgresUserService(repository repository.UserRepository) UserService {
+func NewPostgresUserService(repository repository.UserRepository) PostgresUserService {
 	return PostgresUserService{repository: repository}
 }

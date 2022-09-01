@@ -12,7 +12,7 @@ type Logger interface {
 type ZeroLogger struct {
 }
 
-func NewZeroLogger() Logger {
+func NewZeroLogger() ZeroLogger {
 	return ZeroLogger{}
 }
 

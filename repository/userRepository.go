@@ -16,7 +16,7 @@ type PostgresUserRepository struct {
 	logger log.Logger
 }
 
-func NewPostgresUserRepository(database *sqlx.DB) UserRepository {
+func NewPostgresUserRepository(database *sqlx.DB) PostgresUserRepository {
 	return PostgresUserRepository{
 		db: database,
 	}

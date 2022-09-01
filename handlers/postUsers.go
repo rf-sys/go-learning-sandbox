@@ -1,4 +1,4 @@
-package routes
+package handlers
 
 import (
 	"awesomeProject1/log"
@@ -9,23 +9,26 @@ import (
 	"net/http"
 )
 
-const postUsersEndpoint = "/users"
+type PostUsersHandler struct {
+	service service.UserService
+	logger  log.Logger
+}
 
-func postUsers(service service.UserService, logger log.Logger) http.HandlerFunc {
+func (h PostUsersHandler) Handler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var user model.User
 
 		err := json.NewDecoder(r.Body).Decode(&user)
 		if err != nil {
-			logger.Error(err, "failed decoding JSON payload")
+			h.logger.Error(err, "failed decoding JSON payload")
 			http.Error(w, "Invalid payload", http.StatusBadRequest)
 			return
 		}
 
-		newUser, err := service.Create(user)
+		newUser, err := h.service.Create(user)
 
 		if err != nil {
-			logger.Error(err, "failed inserting new user into database")
+			h.logger.Error(err, "failed inserting new user into database")
 			http.Error(w, http.StatusText(http.StatusUnprocessableEntity), http.StatusUnprocessableEntity)
 			return
 		}
@@ -33,7 +36,14 @@ func postUsers(service service.UserService, logger log.Logger) http.HandlerFunc 
 		w.WriteHeader(http.StatusCreated)
 		_, err = w.Write([]byte(fmt.Sprintf("user created with id %v", newUser.ID)))
 		if err != nil {
-			logger.Error(err, "failed writing a response body")
+			h.logger.Error(err, "failed writing a response body")
 		}
+	}
+}
+
+func NewPostUsersHandler(service service.UserService, logger log.Logger) PostUsersHandler {
+	return PostUsersHandler{
+		service: service,
+		logger:  logger,
 	}
 }
