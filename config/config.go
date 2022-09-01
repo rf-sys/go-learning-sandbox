@@ -34,16 +34,19 @@ const databaseMaxOpenConnsKey = "DATABASE_MAX_OPEN_CONNS"
 const databaseMaxIdleConnsKey = "DATABASE_MAX_IDLE_CONNS"
 
 func NewConfig() Config {
+	// search for env variables that start with "AP" prefix
 	viper.SetEnvPrefix("AP")
 
+	// set default values if no environment variables present
 	viper.SetDefault(databaseConnMaxLifetimeKey, 0)
 	viper.SetDefault(databaseConnMaxIdleTimeKey, 0)
 	viper.SetDefault(databaseMaxOpenConnsKey, 0)
 	viper.SetDefault(databaseMaxIdleConnsKey, 0)
 
+	// load environment variables into Viper
 	viper.AutomaticEnv()
 
-	// populating our Config struct
+	// populate our Config struct
 	cfg := Config{
 		Redis: Redis{
 			Host:     viper.GetString(redisHostKey),
