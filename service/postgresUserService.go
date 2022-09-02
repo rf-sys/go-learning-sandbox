@@ -40,10 +40,6 @@ func (service PostgresUserService) Create(user model.User) (model.User, error) {
 		return model.User{}, err
 	}
 
-	if err != nil {
-		return model.User{}, err
-	}
-
 	newUser.ID = id
 
 	return newUser, nil
