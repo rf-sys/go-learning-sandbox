@@ -65,8 +65,8 @@ func (service PostgresUserService) Edit(id int, user model.User) error {
 	}
 
 	if user.Password != "" && dbUser.Password != user.Password {
-		hash, e := createPasswordHash(user.Password)
-		if e != nil {
+		hash, err2 := createPasswordHash(user.Password)
+		if err2 != nil {
 			return err
 		}
 		updatedUser.Password = hash
