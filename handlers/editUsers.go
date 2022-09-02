@@ -44,7 +44,9 @@ func (h EditUserHandler) Handler() http.HandlerFunc {
 			return
 		}
 
-		err = h.service.Edit(id, user)
+		user.ID = id
+
+		err = h.service.Edit(user)
 		if err != nil {
 			h.logger.Error(err, "failed updating the user")
 

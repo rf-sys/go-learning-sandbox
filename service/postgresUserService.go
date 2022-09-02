@@ -49,33 +49,34 @@ func (service PostgresUserService) Create(user model.User) (model.User, error) {
 	return newUser, nil
 }
 
-func (service PostgresUserService) Edit(id int, user model.User) error {
-	// check if user exists in the database before trying to edit it
-	dbUser, err := service.GetOne(id)
+func (service PostgresUserService) Edit(payload model.User) error {
+	// check if payload exists in the database before trying to edit it
+	dbUser, err := service.GetOne(payload.ID)
 	if err != nil {
 		return ErrUserNotFound
 	}
 
-	updatedUser := model.User{}
+	user := model.User{}
 
-	if user.Username != "" && dbUser.Username != user.Username {
-		updatedUser.Username = user.Username
+	if payload.Username != "" && dbUser.Username != payload.Username {
+		user.Username = payload.Username
 	} else {
-		updatedUser.Username = dbUser.Username
+		user.Username = dbUser.Username
 	}
 
-	if user.Password != "" && dbUser.Password != user.Password {
-		hash, err2 := createPasswordHash(user.Password)
+	if payload.Password != "" && dbUser.Password != payload.Password {
+		hash, err2 := createPasswordHash(payload.Password)
 		if err2 != nil {
 			return err
 		}
-		updatedUser.Password = hash
+		user.Password = hash
 	} else {
-		updatedUser.Password = dbUser.Password
+		user.Password = dbUser.Password
 	}
 
-	updatedUser.ID = id
-	err = service.repository.Update(updatedUser)
+	user.ID = dbUser.ID
+
+	err = service.repository.Update(user)
 	if err != nil {
 		return err
 	}
