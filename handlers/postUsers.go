@@ -5,6 +5,7 @@ import (
 	"awesomeProject1/model"
 	"awesomeProject1/service"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 )
@@ -29,6 +30,12 @@ func (h PostUsersHandler) Handler() http.HandlerFunc {
 
 		if err != nil {
 			h.logger.Error(err, "failed inserting new user into database")
+
+			if errors.Is(err, service.ErrUserAlreadyExists) {
+				http.Error(w, err.Error(), http.StatusConflict)
+				return
+			}
+
 			http.Error(w, http.StatusText(http.StatusUnprocessableEntity), http.StatusUnprocessableEntity)
 			return
 		}
