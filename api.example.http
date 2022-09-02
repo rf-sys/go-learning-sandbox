@@ -14,3 +14,12 @@ Content-Type: application/json
   "username": "chassidykn",
   "password": "67dSgmgUAAP"
 }
+
+### Edit user
+PUT http://localhost:8080/users/1
+Content-Type: application/json
+
+{
+  "username": "marcasb",
+  "password": "hhzgUYupjqBucVrZNRr5W"
+}

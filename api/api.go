@@ -15,6 +15,7 @@ type Api struct {
 	// user api
 	getUsersHandler  handlers.GetUsersHandler
 	postUsersHandler handlers.PostUsersHandler
+	editUsersHandler handlers.EditUserHandler
 }
 
 func (api Api) Startup() error {
@@ -29,6 +30,7 @@ func (api Api) Startup() error {
 	r.Get("/configs", api.getConfigsHandler.Handler())
 	r.Get("/users", api.getUsersHandler.Handler())
 	r.Post("/users", api.postUsersHandler.Handler())
+	r.Put("/users/{id}", api.editUsersHandler.Handler())
 
 	return http.ListenAndServe(":8080", r)
 }
@@ -37,10 +39,12 @@ func NewApi(
 	getConfigsHandler handlers.GetConfigHandler,
 	getUsersHandler handlers.GetUsersHandler,
 	postUsersHandler handlers.PostUsersHandler,
+	editUsersHandler handlers.EditUserHandler,
 ) Api {
 	return Api{
 		getConfigsHandler: getConfigsHandler,
 		getUsersHandler:   getUsersHandler,
 		postUsersHandler:  postUsersHandler,
+		editUsersHandler:  editUsersHandler,
 	}
 }

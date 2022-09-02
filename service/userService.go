@@ -7,7 +7,10 @@ import (
 
 type UserService interface {
 	GetAllUsers() ([]model.User, error)
+	GetOne(id int) (model.User, error)
 	Create(user model.User) (model.User, error)
+	Edit(id int, user model.User) error
 }
 
 var ErrUserAlreadyExists = errors.New("user already exists")
+var ErrUserNotFound = errors.New("user not found")

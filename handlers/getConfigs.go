@@ -12,6 +12,10 @@ type GetConfigHandler struct {
 	logger log.Logger
 }
 
+func NewGetConfigHandler(cfg config.Config, logger log.Logger) GetConfigHandler {
+	return GetConfigHandler{cfg: cfg, logger: logger}
+}
+
 func (h GetConfigHandler) Handler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cfgJson, err := json.Marshal(h.cfg)
@@ -23,12 +27,5 @@ func (h GetConfigHandler) Handler() http.HandlerFunc {
 
 		w.WriteHeader(http.StatusCreated)
 		_, _ = w.Write(cfgJson)
-	}
-}
-
-func NewGetConfigHandler(cfg config.Config, logger log.Logger) GetConfigHandler {
-	return GetConfigHandler{
-		cfg:    cfg,
-		logger: logger,
 	}
 }

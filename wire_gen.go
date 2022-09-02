@@ -34,7 +34,8 @@ func InitializeApp() (App, error) {
 	postgresUserService := service.NewPostgresUserService(postgresUserRepository)
 	getUsersHandler := handlers.NewGetUsersHandler(postgresUserService, zeroLogger)
 	postUsersHandler := handlers.NewPostUsersHandler(postgresUserService, zeroLogger)
-	apiApi := api.NewApi(getConfigHandler, getUsersHandler, postUsersHandler)
+	editUserHandler := handlers.NewEditUserHandler(postgresUserService, zeroLogger)
+	apiApi := api.NewApi(getConfigHandler, getUsersHandler, postUsersHandler, editUserHandler)
 	app := NewApp(apiApi)
 	return app, nil
 }

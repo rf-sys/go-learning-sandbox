@@ -12,6 +12,10 @@ type GetUsersHandler struct {
 	logger  log.Logger
 }
 
+func NewGetUsersHandler(service service.UserService, logger log.Logger) GetUsersHandler {
+	return GetUsersHandler{service: service, logger: logger}
+}
+
 func (h GetUsersHandler) Handler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		users, err := h.service.GetAllUsers()
@@ -30,12 +34,5 @@ func (h GetUsersHandler) Handler() http.HandlerFunc {
 
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(usersJson)
-	}
-}
-
-func NewGetUsersHandler(service service.UserService, logger log.Logger) GetUsersHandler {
-	return GetUsersHandler{
-		service: service,
-		logger:  logger,
 	}
 }

@@ -25,6 +25,7 @@ func InitializeApp() (App, error) {
 		handlers.NewGetConfigHandler,
 		handlers.NewGetUsersHandler,
 		handlers.NewPostUsersHandler,
+		handlers.NewEditUserHandler,
 
 		// config
 		config.NewConfig,
