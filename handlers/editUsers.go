@@ -25,18 +25,21 @@ func (h EditUserHandler) Handler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var user model.User
 
+		// extract URL parameter
 		param := chi.URLParam(r, "id")
 		if param == "" {
 			http.Error(w, "no user id", http.StatusBadRequest)
 			return
 		}
 
+		// try to convert "id" parameter into int type
 		id, err := strconv.Atoi(param)
 		if err != nil {
 			http.Error(w, "invalid user id", http.StatusBadRequest)
 			return
 		}
 
+		// decode json body into "User" struct
 		err = json.NewDecoder(r.Body).Decode(&user)
 		if err != nil {
 			h.logger.Error(err, "failed decoding JSON payload")
@@ -44,8 +47,10 @@ func (h EditUserHandler) Handler() http.HandlerFunc {
 			return
 		}
 
+		// make sure we use ID from query
 		user.ID = id
 
+		// update user
 		err = h.service.Edit(user)
 		if err != nil {
 			h.logger.Error(err, "failed updating the user")
